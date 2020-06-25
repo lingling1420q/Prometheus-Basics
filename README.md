@@ -15,7 +15,8 @@
 4. [Show me how it is done](https://github.com/yolossn/Prometheus-Basics#show-me-how-it-is-done)
 5. [Types of metrics](https://github.com/yolossn/Prometheus-Basics#types-of-metrics)
 6. [Create a simple exporter](https://github.com/yolossn/Prometheus-Basics#create-a-simple-exporter)
-7. [References](https://github.com/yolossn/Prometheus-Basics#References)
+7. [Run prometheus and grafana in docker](https://github.com/yolossn/Prometheus-Basics#run-prometheus-and-grafana-in-docker)
+8. [References](https://github.com/yolossn/Prometheus-Basics#References)
 
 
 # What is prometheus ?
@@ -78,7 +79,7 @@ I can scrape multiple metrics which will be useful to understand what is happeni
 
 # Show me how it is done.
 
-Let’s get our hands dirty and setup prometheus. Prometheus is written using golang and all you need is the binary compiled for your operating system. Download the binary corresponding to your operating system from [here](https://prometheus.io/download/) and add the binary to your path.
+Let’s get our hands dirty and setup prometheus. Prometheus is written using [Go](https://golang.org/) and all you need is the binary compiled for your operating system. Download the binary corresponding to your operating system from [here](https://prometheus.io/download/) and add the binary to your path.
 
 Prometheus exposes its own metrics which can be consumed by itself or another prometheus server.
 
@@ -255,7 +256,7 @@ Summary is similar to histogram and calculates quantiles which can be configured
 
 # Create a simple exporter
 
-We will create a request counter metric exporter using golang.
+We will create a request counter metric exporter using Go.
 
 *server.go*
 ```go
@@ -319,7 +320,7 @@ func main() {
 ```
 
 The `prometheus.MustRegister` function registers the pingCounter to the default Register.
-To expose the metrics the golang prometheus client library provides the promhttp package. 
+To expose the metrics the Go Prometheus client library provides the promhttp package. 
 `promhttp.Handler()` provides a `http.Handler` which exposes the metrics registered in the Default Register.
 
 *serverWithMetric.go*
@@ -393,7 +394,7 @@ Note:
 
 Now that we have our server with `ping_request_count` metric let's create a visualization dashboard. For this, we will use [Grafana](https://grafana.com/). If you wonder why should one use Grafana when we can create graphs using Prometheus. The answer is that the graph that we use to visualize our queries is used for ad-hoc queries and debugging. Prometheus official docs suggest using Grafana or Console Templates for graphs. [Refer](https://prometheus.io/docs/visualization/browser/) 
 
-Console Templates is a way to create graphs using golang templates which I am not covering as it has a learning curve. Grafana is an analytics platform that allows you to query,visualize, and set alerts on your metrics. Comparatively Grafana is easy to use for a beginner. 
+Console Templates is a way to create graphs using Go templates which I am not covering as it has a learning curve. Grafana is an analytics platform that allows you to query,visualize, and set alerts on your metrics. Comparatively Grafana is easy to use for a beginner. 
 
 Install Grafana by following the steps for your operating system from [here](https://grafana.com/docs/grafana/latest/installation/requirements/#supported-operating-systems).
 
@@ -432,14 +433,23 @@ I hope I did justice to your time and helped you understand the basics of promet
 **Where to go from here:**
 - It is important to understand PromQL extensively to take advantage of the metrics which one has collected. Remember the goal is not just to collect metrics but to derive answers for application related questions.  [This](https://medium.com/@valyala/promql-tutorial-for-beginners-9ab455142085) is a very good resource to get started with PromQL.
 
-
-
 To Do 
 - [x] Integration with grafana to create dashboards
 - [ ] Add code samples for all metric types.
 - [ ] Explain about the concept of Service Discovery for integrating with kubernetes.
 - [ ] Basic Alerting + Prometheus alerts vs Grafana alerts.
 - [ ] Integrating alerts with tool like pagerduty.
+
+### Run prometheus and grafana in docker
+
+You can run the whole setup of simple ping server, Prometheus and Grafana using docker. Just run the following command.
+ 
+```bash
+docker-compose up
+```
+- http://localhost:9090 - prometheus UI
+- http://localhost:8090 - ping/pong service
+- http://localhost:3000/d/WdZVAykGk/ping-service?orgId=1 - grafana dashboard (admin:admin)
 
 ### References:
 - https://prometheus.io/docs/
